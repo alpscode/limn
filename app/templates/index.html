@@ -16,7 +16,7 @@
     <!-- <script type="module" src="https://cdn.jsdelivr.net/npm/vue2-hammer@2.1.2/index.js" integrity="sha256-HB8a/Uqv/wERKDdcsOY7EvwSeehUB/++vCpTBEHD1Mg=" crossorigin="anonymous"></script> -->
     <script src="https://bundle.run/vue2-hammer@2.1.2"></script>
     <link rel="shortcut icon" href="** url_for('static', filename='favicon.ico') **">
-    <title>My Photo App</title>
+    <title>Limn Photo Gallery</title>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
                 <img src="** url_for('static', filename='logo.png') **" alt="PhotoApp logo" />
             </div>
             <div class="col-8 text-center">
-                <span>My Photo App 2020</span>
+                <span>Limn Photo Gallery</span>
             </div>
             <div class="col-2">
             </div>
@@ -98,7 +98,7 @@
             </div>
             <!-- </transition-group> -->
             <div class="modal-info">
-                {{ $store.getters.imgdetails }}
+                <span class="modal-details my-auto">{{ $store.getters.imgdetails }}</span>
             </div>
         </div>
     </div>

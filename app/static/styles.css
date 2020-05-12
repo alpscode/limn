@@ -151,6 +151,13 @@ div.topbar-wrapper div.text-right {
     background-color: rgba(255, 255, 255, 0.5);
     color: black;
     height: 40px;
+    display: flex;
+}
+
+.modal-details {
+    text-align: center;
+    width: 100%;
+    height: 21px;
 }
 
 /* .img-transition {

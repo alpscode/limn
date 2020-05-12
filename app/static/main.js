@@ -37,7 +37,9 @@ const store = new Vuex.Store({
         },
         imgdetails: state => {
             if (store.getters.image !== "") {
-                return 'Image Index: ' + state.currentVal + ', src: ' + state.members[state.currentVal]['src']
+                var src = state.members[state.currentVal]['src']
+                var name = src.split('/').pop();
+                return name
             }
             else { return '' }
         }

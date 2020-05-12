@@ -2,8 +2,6 @@ FROM python:3.7.7-slim-buster
 
 LABEL maintainer="Sertalp B. Cay <sertalpbilal@gmail.com>"
 
-RUN apt update -y
-RUN apt install -y curl
 RUN pip3 install --upgrade pip
 RUN pip3 install flask flask_restful flask-cors pillow gevent
 
