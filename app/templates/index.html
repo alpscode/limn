@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="** url_for('static', filename='styles.css') **">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.2.0/vuex.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+    <!-- <script type="module" src="https://cdn.jsdelivr.net/npm/vue2-hammer@2.1.2/index.js" integrity="sha256-HB8a/Uqv/wERKDdcsOY7EvwSeehUB/++vCpTBEHD1Mg=" crossorigin="anonymous"></script> -->
+    <script src="https://bundle.run/vue2-hammer@2.1.2"></script>
+    <link rel="shortcut icon" href="** url_for('static', filename='favicon.ico') **">
+    <title>My Photo App</title>
+</head>
+
+<body>
+    <nav class="navbar fixed-top navbar-light bg-light">
+        <div class="row container mx-auto">
+            <div class="col-2">
+                <img src="** url_for('static', filename='logo.png') **" alt="PhotoApp logo" />
+            </div>
+            <div class="col-8 text-center">
+                <span>My Photo App 2020</span>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <div class="container" id="breadcrumbs">
+            Current location: {{ $store.getters.location }}
+        </div>
+    </nav>
+
+    <div class="topbar" id="topbar">
+        <div class="container row mx-auto topbar-wrapper">
+            <div class="col-3 text-left">
+                <button v-if="$store.getters.location == '/usermedia'" type="button" class="btn btn-light">
+                    <span class="fas fa-plus-circle"></span>
+                </button>
+            </div>
+            <div class="col-6 text-center">
+                <button type="button" class="btn btn-primary" v-on:click.stop="goBack" :disabled="$store.getters.history.length == 0">
+                    <span class="fas fa-long-arrow-alt-left"></span>
+                </button>
+
+                <button type="button" class="btn btn-primary" v-on:click.stop="shuffleMembers">
+                    <span class="fas fa-random"></span>
+                </button>
+
+                <button type="button" class="btn btn-primary" v-on:click.stop="startViewer">
+                    <span class="fas fa-play"></span>
+                </button>
+            </div>
+            <div class="col-3 text-right">
+                <button type="button" class="btn btn-light">
+                    <!-- <span class="fas fa-th"></span> -->
+                    <span class="fas fa-list"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- col-12 col-sm-4 -->
+
+    <!-- <div class="container d-flex card-gallery flex-wrap" id="vueapp"> -->
+    <transition-group name="my-list" class="container d-flex card-gallery flex-wrap" id="vueapp" tag="div" v-cloak>
+        <!-- <transition-group name="my-list" tag="div"> -->
+        <div v-for="(i, index) in $store.getters.members" class="imgcard" v-bind:key="i.no">
+            <div v-if="i.type == 'directory'" v-on:click.stop="navigate" class="imgcard-content btn imgcard-directory" v-bind:data-loc="i.address" v-bind:data-type="i.type" :data-index="index">
+                <div class="my-auto">
+                    <span class="fa fa-folder-open folder-icon"></span><br/>
+                    <span class="folder-str">{{ i.name }}</span>
+                </div>
+            </div>
+            <div v-else v-on:click.stop="openImg" class="imgcard-content btn imgcard-file" v-bind:data-loc="i.address" v-bind:data-type="i.type" v-bind:data-target="i.src" :data-index="index">
+                <img class="gallery-img" v-lazy="i.thumb" />
+            </div>
+        </div>
+        <!-- </transition-group> -->
+    </transition-group>
+    <!-- </div> -->
+
+    <div class="img-viewer" id="img-viewer" v-cloak v-if="!isHidden" v-on:click.stop="closeModal" v-hammer:swipe="onSwipe">
+        <!-- v-cloak aria-hidden="false"> -->
+        <div class="container modal-wrapper">
+            <div class="modal-canvas">
+            <!-- <transition-group name="img-transition" class="modal-canvas" tag="div"> -->
+                <img class="my-auto mx-auto align-middle" v-bind:src="$store.getters.image" v-bind:key="$store.getters.currentVal" />
+                <!-- <img class="my-auto mx-auto align-middle" src="/image?loc=/usermedia/photos/nature/casey-horner-4rDCa5hBlCs-unsplash.jpg" src="/image?loc=/usermedia/photos/nature/jeremy-goldberg-lKbW5QTT3nQ-unsplash.jpg" /> -->
+            </div>
+            <!-- </transition-group> -->
+            <div class="modal-info">
+                {{ $store.getters.imgdetails }}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="** url_for('static', filename='main.js') **"></script>
+</body>
+
+</html>
