@@ -2,7 +2,7 @@ import os
 import pathlib
 from functools import lru_cache
 from flask import send_file
-from PIL import Image
+from PIL import Image, ExifTags
 
 
 @lru_cache(maxsize=100)
@@ -29,6 +29,20 @@ def get_thumbnail(img_location, size):
     if os.path.exists(thumb_url):
         return thumb_url
     img = Image.open(img_location)
+    
+    try:
+        for orientation in ExifTags.TAGS.keys() : 
+            if ExifTags.TAGS[orientation]=='Orientation' : break
+        exif=dict(img._getexif().items())
+        if exif[orientation] == 3 : 
+            img=img.rotate(180, expand=True)
+        elif exif[orientation] == 6 : 
+            img=img.rotate(270, expand=True)
+        elif exif[orientation] == 8 : 
+            img=img.rotate(90, expand=True)
+    except:
+        pass
+
     side = min(img.size)
     w, h = img.size
     square = img.crop(((w - side) // 2,
@@ -47,6 +61,20 @@ def get_image(img_location, maxwidth, maxheight):
         if os.path.exists(cache_url):
             return cache_url
         img = Image.open(img_location)
+
+        try:
+            for orientation in ExifTags.TAGS.keys() : 
+                if ExifTags.TAGS[orientation]=='Orientation' : break
+            exif=dict(img._getexif().items())
+            if exif[orientation] == 3 : 
+                img=img.rotate(180, expand=True)
+            elif exif[orientation] == 6 : 
+                img=img.rotate(270, expand=True)
+            elif exif[orientation] == 8 : 
+                img=img.rotate(90, expand=True)
+        except:
+            pass
+
         w, h = img.size
         resize_ratio = min(int(maxwidth) / w, int(maxheight) / h)
         resized = img.resize((int(w*resize_ratio), int(h*resize_ratio)), Image.LANCZOS)

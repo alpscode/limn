@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, send_file
 from background import list_directory, clear_cache, get_thumbnail, get_image
 from flask_cors import CORS
 import json
-from gevent.pywsgi import WSGIServer
 
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60
 CORS(app)
+
 
 jinja_options = app.jinja_options.copy()
 jinja_options.update(dict(
@@ -52,7 +53,14 @@ def image_request():
     return send_file(get_image(image_loc, width, height), mimetype='image')
 
 
+@app.after_request
+def add_header(response):    
+  response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+  if ('Cache-Control' not in response.headers):
+      response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+      response.headers['Pragma'] = 'no-cache'
+  return response
+
+
 if __name__ == "__main__":
-    #app.run(host="0.0.0.0", port=5000, threaded=True)
-    http_server = WSGIServer(('0.0.0.0', 5000), app)
-    http_server.serve_forever()
+    app.run(host='0.0.0.0', port=5000, debug=False)

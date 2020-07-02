@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -13,7 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.2.0/vuex.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
-    <!-- <script type="module" src="https://cdn.jsdelivr.net/npm/vue2-hammer@2.1.2/index.js" integrity="sha256-HB8a/Uqv/wERKDdcsOY7EvwSeehUB/++vCpTBEHD1Mg=" crossorigin="anonymous"></script> -->
     <script src="https://bundle.run/vue2-hammer@2.1.2"></script>
     <link rel="shortcut icon" href="** url_for('static', filename='favicon.ico') **">
     <title>Limn Photo Gallery</title>
@@ -41,10 +39,14 @@
 
     <div class="topbar" id="topbar">
         <div class="container row mx-auto topbar-wrapper">
-            <div class="col-3 text-left">
+            <!-- TODO: Add ability to include folders (or network locations) -->
+            <!-- <div class="col-3 text-left">
                 <button v-if="$store.getters.location == '/usermedia'" type="button" class="btn btn-light">
                     <span class="fas fa-plus-circle"></span>
                 </button>
+            </div> -->
+            <div class="col-3 text-left">
+                
             </div>
             <div class="col-6 text-center">
                 <button type="button" class="btn btn-primary" v-on:click.stop="goBack" :disabled="$store.getters.history.length == 0">
